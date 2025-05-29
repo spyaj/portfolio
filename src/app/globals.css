@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: oklch(0.967 0.003 264.542);
+  --popover-color: #ffffff;
+}
+[data-theme="dark"] {
+  --primary-color: oklch(0.21 0.034 264.665);
+  --popover-color: #ffffff;
+}
+
+/* @theme inline {
+  
+} */
+
+/* Theme Configuration */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-primary: var(--primary-color);
+  --color-popover: var(--popover-color);
+  --text-h1: 3rem;
+  --text-h1--line-height: 1.25em;
+  --text-h1--letter-spacing: 0.125em;
+  --text-h1--font-weight: 700;
+
+  --breakpoint-3xl: 120rem;
+}
+
+/* Container Utility */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @variant sm {
+    padding-inline: 1.5rem; /* 640px */
+  }
+  @variant md {
+    padding-inline: 2rem; /* 768px */
+  }
+  @variant lg {
+    padding-inline: 3rem; /* 1024px */
+  }
+  @variant xl {
+    padding-inline: 4rem; /* 1280px */
+  }
+  @variant 2xl {
+    padding-inline: 5rem; /* 1536px */
+  }
+  @variant 3xl {
+    padding-inline: 5rem; /* 1920px */
+  }
+}
+
+body {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family: var(--font-inter);
+}

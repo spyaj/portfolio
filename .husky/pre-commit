@@ -1,0 +1,28 @@
+# Run ESLint check
+echo "🔎 Running ESLint checks..."
+if ! yarn lint
+then
+  echo "❌ ESLint errors found! Run 'yarn lint:fix' to attempt auto-fix."
+  exit 1
+fi
+echo "✅ ESLint checks passed!"
+
+# Run Prettier check
+echo "🎨 Checking code formatting..."
+if ! yarn check-format
+then
+  echo "❌ Formatting issues found! Run 'yarn check-format:fix' to fix them."
+  exit 1
+fi
+echo "✨ Code formatting looks good!"
+
+# Run build check
+# echo "🏗️  Verifying project build..."
+# if ! yarn build
+# then
+#   echo "🚨 Build failed! Fix build errors before committing."
+#   exit 1
+# fi
+# echo "📦 Project builds successfully!"
+
+echo "🚀 All pre-commit checks passed! Ready to commit."

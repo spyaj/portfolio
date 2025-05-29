@@ -1,0 +1,45 @@
+# .prettierignore
+
+# Build outputs
+.next
+dist
+out
+build
+
+# Dependencies
+node_modules
+
+# Config files
+*.config.js
+.env*
+Dockerfile
+.eslintignore
+
+# Tests and coverage
+coverage
+*.test.*
+*.spec.*
+__tests__
+__mocks__
+
+# Auto-generated files
+*.d.ts
+*.generated.*
+public/locales
+
+# Documentation
+*.md
+CHANGELOG
+
+# Lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large assets
+public/assets/**/*.{png,jpg,jpeg,gif,mp4,pdf}
