@@ -1,61 +1,44 @@
-# Next 15 Setup
+# Personal Portfolio
 
-This repo is the frontend application for Next 15 Setup.
+Welcome to my personal portfolio, a showcase of my skills as a web developer! Built with **Next.js 15.3.3** and styled with **Tailwind CSS v4**, this portfolio highlights my projects, passions, and creativity through an interactive and visually appealing interface. The standout feature is the **Fun Zone**, where you can explore my hobbies with engaging animations and games, including a heartbeat music animation that syncs with audio playback. The site is fully responsive, supports light/dark themes, and is optimized for performance.
 
-## Prerequisites
+🌐 **[Live Demo](#)** *(Replace with your deployed URL, e.g., Vercel link)*  
+📂 **GitHub Repository**: You're here!  
 
-You should be able to run the following command after the installation of [Node](http://nodejs.org/) version above 20.11.0.
+## ✨ Features
 
-## Steps to run the code locally
+- **Interactive Fun Zone**:
+  - **Music Animation**: A heartbeat animation (two SVG lines with glow and dynamic peaks) that animates only when music plays, controlled by play/pause and mute/unmute buttons. Audio persists site-wide until paused or reloaded, resuming from the last position.
+  - **Cricket Animation**: A custom animation celebrating my love for cricket.
+  - **Tic-Tac-Toe Game**: Play against the computer for some quick fun!
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop using Tailwind CSS.
+- **Theme Switching**: Light and dark modes powered by `next-themes`, with seamless transitions.
+- **Contact Form**: A user-friendly form for visitors to reach out (backend integration optional).
+- **Performance**: Built with Next.js for server-side rendering, static generation, and fast load times.
+- **Accessibility**: ARIA labels and keyboard navigation for inclusive user experience.
 
-1. Clone the repository from Github onto your local machine and Goto Project
+## 🛠️ Tech Stack
 
-   ```
-   git clone https://github.com/abii19/next-15-setup
+- **Framework**: [Next.js 15.3.3](https://nextjs.org/) (React-based)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Theming**: [next-themes](https://github.com/pacocoursey/next-themes) for light/dark modes
+- **Build Tool**: Webpack (bundled with Next.js)
+- **Audio**: HTML5 Audio for heartbeat sound playback
+- **Animations**: CSS animations for SVG heartbeat effects (glow, peaks, flow)
+- **Deployment**: Ready for Vercel or other platforms
+- **Version Control**: Git & GitHub
 
-   ```
+## 📦 Prerequisites
 
-2. Move to Cloned Repo
+Before setting up the project, ensure you have:
 
-   ```
-   cd next-15-setup
+- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- A code editor like [VS Code](https://code.visualstudio.com/)
 
-   ```
+## 🚀 Setup Instructions
 
-3. Use the node version above 20.11.0
-
-   ```
-   nvm use 20.11.0
-
-   ```
-
-4. Install dependencies in all packages
-
-   ```
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
-
-5. Set env vars
-
-   Copy the existing .env.example file present.
-
-   ```
-   cp .env.example .env
-
-   ```
-
-6. Now can run the application locally with the command
-
-   ```
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   ```
-
-   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/your-repo-name.git
+   cd your-repo-name

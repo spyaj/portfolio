@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { Toaster } from "@/components/ui/sooner";
-
 import "./globals.css";
+import { Providers } from "./providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -11,20 +10,20 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Next 15 Setup",
-  description: "",
+  title: "Pramod Joshi - Portfolio",
+  description: "Portfolio website of Pramod Joshi, a passionate tech developer.",
+  openGraph: {
+    title: "Pramod Joshi - Portfolio",
+    description: "Explore my tech projects and hobbies.",
+    images: "/og-image.png",
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        {children}
-        <Toaster />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

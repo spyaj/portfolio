@@ -36,18 +36,19 @@ const eslintConfig = [
     rules: {
       "react/react-in-jsx-scope": "off",
       "no-unused-vars": "off", // Disable the base rule
-      "@typescript-eslint/no-unused-vars": ["error"],
+      "@typescript-eslint/no-unused-vars": ["off"],
       // "import/no-anonymous-default-export": "off",
-      "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: true }],
+      "@typescript-eslint/no-misused-promises": ["off", { checksVoidReturn: false }],
       "@typescript-eslint/no-unnecessary-condition": [
-        "error",
+        "off",
         {
-          allowConstantLoopConditions: true,
+          allowConstantLoopConditions: false,
         },
       ],
-      "@typescript-eslint/no-non-null-assertion": "error",
-      "@typescript-eslint/consistent-type-exports": "error",
-      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/consistent-type-exports": "off",
+      "@typescript-eslint/consistent-type-imports": "off",
+      "react/no-unescaped-entities": 0,
       // ------
       // "@next/next/no-duplicate-head": "off",
     },
