@@ -4,18 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
-// Ensure lucide-react is installed
-
 const MusicAnimation = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0); // Track playback position
-  const [duration, setDuration] = useState(0); // Track song duration
-  const [progress, setProgress] = useState(0); // Progress in percentage
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
-  // Define your playlist array (place songs in public/songs/)
   const playlist = [
     { title: "Dhairya", artist: "Sajjan Raj Vaidya", src: "/songs/heartbeat.mp3" },
     { title: "Kati Baschau Pardesamai", artist: "Trishna Gurung", src: "/songs/song1.mp3" },
@@ -25,72 +22,66 @@ const MusicAnimation = () => {
     { title: "Sapana Ko Mayalu", artist: "The Elements", src: "/songs/song5.mp3" },
   ];
 
-  // Reset currentTime and initialize audio on mount/reload
+  // **SOLUTION PART 1: Initialize Audio on component mount and when song changes**
+  // This effect ensures audioRef.current always has an audio object.
   useEffect(() => {
-    setCurrentTime(0); // Start from beginning on reload
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  // Update progress and duration, handle song end
-  useEffect(() => {
-    if (audioRef.current) {
-      const updateProgress = () => {
-        setCurrentTime(audioRef.current!.currentTime);
-        setDuration(audioRef.current!.duration);
-        setProgress((audioRef.current!.currentTime / audioRef.current!.duration) * 100 || 0);
-      };
-      const handleEnded = () => {
-        nextSong(); // Move to next song when current ends
-      };
-      audioRef.current.addEventListener("timeupdate", updateProgress);
-      audioRef.current.addEventListener("ended", handleEnded);
-      return () => {
-        audioRef.current!.removeEventListener("timeupdate", updateProgress);
-        audioRef.current!.removeEventListener("ended", handleEnded);
-      };
-    }
-  }, [currentSongIndex]);
-
-  // Handle audio playback
-  const playAudio = () => {
+    // Create the audio object if it doesn't exist
     if (!audioRef.current) {
       audioRef.current = new Audio(playlist[currentSongIndex].src);
-      audioRef.current.loop = false; // Disable loop to allow next song
-      audioRef.current.addEventListener("loadedmetadata", () => {
-        setDuration(audioRef.current!.duration);
-      });
-      console.log("Audio initialized:", audioRef.current.src);
+      audioRef.current.loop = false;
+    } else {
+      // If it exists, just update the source
+      audioRef.current.src = playlist[currentSongIndex].src;
     }
+
+    // If the player was playing, automatically play the new song
+    if (isPlaying) {
+      audioRef.current.play().catch((e) => console.error("Autoplay failed:", e));
+    }
+
+    const audio = audioRef.current; // Create a stable reference for cleanup
+
+    // Event listeners for metadata and time updates
+    const handleMetadata = () => setDuration(audio.duration);
+    const updateProgress = () => {
+      setCurrentTime(audio.currentTime);
+      setDuration(audio.duration);
+      setProgress((audio.currentTime / audio.duration) * 100 || 0);
+    };
+    const handleEnded = () => nextSong();
+
+    audio.addEventListener("loadedmetadata", handleMetadata);
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("ended", handleEnded);
+
+    // Cleanup function to remove listeners
+    return () => {
+      audio.removeEventListener("loadedmetadata", handleMetadata);
+      audio.removeEventListener("timeupdate", updateProgress);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [currentSongIndex]); // This effect re-runs whenever the song changes
+
+  const playAudio = () => {
+    if (!audioRef.current) return; // Safety check
+
     audioRef.current.muted = isMuted;
-    audioRef.current.currentTime = currentTime; // Resume from last position
     audioRef.current
       .play()
-      .then(() => {
-        setIsPlaying(true);
-        console.log("Audio playing, currentTime:", currentTime, "Animation active");
-      })
+      .then(() => setIsPlaying(true))
       .catch((e) => {
         console.error("Audio playback failed:", e);
         setIsPlaying(false);
       });
   };
 
-  // Handle audio pause
   const pauseAudio = () => {
     if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime); // Save current position
       audioRef.current.pause();
       setIsPlaying(false);
-      console.log("Audio paused, saved currentTime:", currentTime, "Animation stopped");
     }
   };
 
-  // Toggle play/pause
   const togglePlayPause = () => {
     if (isPlaying) {
       pauseAudio();
@@ -99,51 +90,40 @@ const MusicAnimation = () => {
     }
   };
 
-  // Navigate to next song and play if isPlaying is true
+  // **SOLUTION PART 2: Simplify next/prev functions**
+  // These functions now only need to update the song index.
+  // The useEffect hook will handle the logic of changing the audio source and auto-playing.
   const nextSong = () => {
-    if (audioRef.current) {
-      setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
-      audioRef.current.src = playlist[(currentSongIndex + 1) % playlist.length].src;
-      setCurrentTime(0);
-      if (isPlaying) {
-        playAudio(); // Play automatically if already playing
-      }
-    }
+    setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+    setCurrentTime(0); // Reset progress for the new song
+    setProgress(0);
   };
 
-  // Navigate to previous song and play if isPlaying is true
   const prevSong = () => {
-    if (audioRef.current) {
-      setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
-      audioRef.current.src =
-        playlist[(currentSongIndex - 1 + playlist.length) % playlist.length].src;
-      setCurrentTime(0);
-      if (isPlaying) {
-        playAudio(); // Play automatically if already playing
-      }
-    }
+    setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
+    setCurrentTime(0); // Reset progress for the new song
+    setProgress(0);
   };
 
-  // Update progress on slider change
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newProgress = Number(e.target.value);
     setProgress(newProgress);
-    if (audioRef.current) {
+    if (audioRef.current && duration) {
       const newTime = (newProgress / 100) * duration;
       audioRef.current.currentTime = newTime;
       setCurrentTime(newTime);
     }
   };
 
-  // Toggle mute
   const toggleMute = () => {
     if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-      console.log("Audio muted:", !isMuted);
+      const newMutedState = !isMuted;
+      audioRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
     }
   };
 
+  // The JSX remains the same
   return (
     <div className="relative flex h-48 flex-col items-center justify-center">
       <div className="mb-2 text-sm text-secondary dark:text-secondary-foreground">
@@ -158,17 +138,15 @@ const MusicAnimation = () => {
         aria-label="Heartbeat animation with sound control, visible when music plays"
       >
         <svg width="400" height="80" viewBox="0 0 400 80" className="w-full">
+          {/* SVG content... */}
           <defs>
             <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: "#f43f5e", stopOpacity: 1 }} /> {/* rose-400 */}
-              <stop offset="100%" style={{ stopColor: "#ec4899", stopOpacity: 1 }} />{" "}
-              {/* pink-500 */}
+              <stop offset="0%" style={{ stopColor: "#f43f5e", stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: "#ec4899", stopOpacity: 1 }} />
             </linearGradient>
             <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: "#fbbf24", stopOpacity: 1 }} />{" "}
-              {/* amber-400 */}
-              <stop offset="100%" style={{ stopColor: "#f97316", stopOpacity: 1 }} />{" "}
-              {/* orange-500 */}
+              <stop offset="0%" style={{ stopColor: "#fbbf24", stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: "#f97316", stopOpacity: 1 }} />
             </linearGradient>
             <filter id="glow">
               <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
