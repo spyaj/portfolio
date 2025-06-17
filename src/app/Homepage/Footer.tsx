@@ -43,6 +43,7 @@ export default function Footer() {
           <p className="mt-1">Designed with 🎨 and coded with ❤️ in Bharatpur, Nepal.</p>
         </div>
       </div>
+   
     </footer>
   );
 }

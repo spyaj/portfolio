@@ -60,8 +60,8 @@ const Header = () => {
         </nav>
         <div className="hidden items-center gap-x-4 md:flex">
           <a
-            href="/Pramod-Joshi-FlowCV-Resume-Updated.pdf"
-            download
+            href="/resume.pdf"
+            download="My_Resume.pdf"
             className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:scale-105 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-500"
           >
             <Download className="h-4 w-4" />
@@ -126,8 +126,8 @@ const Header = () => {
           </nav>
           <div className="mt-6 flex flex-col gap-4">
             <a
-              href="/Pramod-Joshi-FlowCV-Resume-Updated.pdf"
-              download
+              href="/resume.pdf"
+              download="My_Resume.pdf"
               className="inline-flex w-fit items-center gap-2 rounded-full bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:scale-105 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-500"
             >
               <Download className="h-4 w-4" />

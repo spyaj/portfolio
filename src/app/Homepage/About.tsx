@@ -1,3 +1,6 @@
+import Image from "next/image";
+
+import { Avatar } from "@/assets/images";
 import { Mail, MapPin } from "lucide-react";
 
 export default function About() {
@@ -6,10 +9,12 @@ export default function About() {
       <div className="container grid items-center gap-12 md:grid-cols-5">
         <div className="relative flex justify-center md:col-span-2">
           <div className="absolute inset-0 animate-pulse rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-30 blur-xl"></div>
-          <img
-            src="https://placehold.co/400x400/FFFFFF/333333?text=PJ"
+          <Image
+            src={Avatar}
             alt="Pramod Joshi"
             className="relative h-64 w-64 rounded-full border-4 border-card object-cover shadow-2xl md:h-80 md:w-80"
+            width={400}
+            height={400}
             onError={(e) => {
               e.currentTarget.src = "https://placehold.co/400x400/FFFFFF/333333?text=PJ";
             }}

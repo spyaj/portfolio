@@ -2,17 +2,33 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+
+// Ensure lucide-react is installed
+
 const MusicAnimation = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0); // Track playback position
+  const [duration, setDuration] = useState(0); // Track song duration
+  const [progress, setProgress] = useState(0); // Progress in percentage
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
-  // Reset currentTime on component mount (page load/reload)
+  // Define your playlist array (place songs in public/songs/)
+  const playlist = [
+    { title: "Dhairya", artist: "Sajjan Raj Vaidya", src: "/songs/heartbeat.mp3" },
+    { title: "Kati Baschau Pardesamai", artist: "Trishna Gurung", src: "/songs/song1.mp3" },
+    { title: "Hataarindai, Bataasindai", artist: "Sajjan Raj Vaidya", src: "/songs/song2.mp3" },
+    { title: "Changa", artist: "Yabesh Thapa", src: "/songs/song3.mp3" },
+    { title: "Najeek", artist: "Bartika Eam Rai", src: "/songs/song4.mp3" },
+    { title: "Sapana Ko Mayalu", artist: "The Elements", src: "/songs/song5.mp3" },
+  ];
+
+  // Reset currentTime and initialize audio on mount/reload
   useEffect(() => {
     setCurrentTime(0); // Start from beginning on reload
     return () => {
-      // Cleanup audio on unmount
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -20,30 +36,53 @@ const MusicAnimation = () => {
     };
   }, []);
 
-  const playAudio = () => {
-    if (!isPlaying) {
-      if (!audioRef.current) {
-        audioRef.current = new Audio("/heartbeat.mp3");
-        audioRef.current.loop = true;
-        console.log("Audio initialized:", audioRef.current.src);
-      }
-      audioRef.current.muted = isMuted;
-      audioRef.current.currentTime = currentTime; // Resume from last position
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-          console.log("Audio playing, currentTime:", currentTime, "Animation active");
-        })
-        .catch((e) => {
-          console.error("Audio playback failed:", e);
-          setIsPlaying(false);
-        });
+  // Update progress and duration, handle song end
+  useEffect(() => {
+    if (audioRef.current) {
+      const updateProgress = () => {
+        setCurrentTime(audioRef.current!.currentTime);
+        setDuration(audioRef.current!.duration);
+        setProgress((audioRef.current!.currentTime / audioRef.current!.duration) * 100 || 0);
+      };
+      const handleEnded = () => {
+        nextSong(); // Move to next song when current ends
+      };
+      audioRef.current.addEventListener("timeupdate", updateProgress);
+      audioRef.current.addEventListener("ended", handleEnded);
+      return () => {
+        audioRef.current!.removeEventListener("timeupdate", updateProgress);
+        audioRef.current!.removeEventListener("ended", handleEnded);
+      };
     }
+  }, [currentSongIndex]);
+
+  // Handle audio playback
+  const playAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(playlist[currentSongIndex].src);
+      audioRef.current.loop = false; // Disable loop to allow next song
+      audioRef.current.addEventListener("loadedmetadata", () => {
+        setDuration(audioRef.current!.duration);
+      });
+      console.log("Audio initialized:", audioRef.current.src);
+    }
+    audioRef.current.muted = isMuted;
+    audioRef.current.currentTime = currentTime; // Resume from last position
+    audioRef.current
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+        console.log("Audio playing, currentTime:", currentTime, "Animation active");
+      })
+      .catch((e) => {
+        console.error("Audio playback failed:", e);
+        setIsPlaying(false);
+      });
   };
 
+  // Handle audio pause
   const pauseAudio = () => {
-    if (isPlaying && audioRef.current) {
+    if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime); // Save current position
       audioRef.current.pause();
       setIsPlaying(false);
@@ -51,6 +90,7 @@ const MusicAnimation = () => {
     }
   };
 
+  // Toggle play/pause
   const togglePlayPause = () => {
     if (isPlaying) {
       pauseAudio();
@@ -59,6 +99,43 @@ const MusicAnimation = () => {
     }
   };
 
+  // Navigate to next song and play if isPlaying is true
+  const nextSong = () => {
+    if (audioRef.current) {
+      setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+      audioRef.current.src = playlist[(currentSongIndex + 1) % playlist.length].src;
+      setCurrentTime(0);
+      if (isPlaying) {
+        playAudio(); // Play automatically if already playing
+      }
+    }
+  };
+
+  // Navigate to previous song and play if isPlaying is true
+  const prevSong = () => {
+    if (audioRef.current) {
+      setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
+      audioRef.current.src =
+        playlist[(currentSongIndex - 1 + playlist.length) % playlist.length].src;
+      setCurrentTime(0);
+      if (isPlaying) {
+        playAudio(); // Play automatically if already playing
+      }
+    }
+  };
+
+  // Update progress on slider change
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newProgress = Number(e.target.value);
+    setProgress(newProgress);
+    if (audioRef.current) {
+      const newTime = (newProgress / 100) * duration;
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  // Toggle mute
   const toggleMute = () => {
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
@@ -69,55 +146,14 @@ const MusicAnimation = () => {
 
   return (
     <div className="relative flex h-48 flex-col items-center justify-center">
-      <style jsx>{`
-        .heartbeat-line {
-          stroke-width: 3;
-          fill: none;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          animation: ${isPlaying
-            ? "flow 4s linear infinite, beat 1s ease-in-out infinite"
-            : "none"};
-        }
-        .heartbeat-line-2 {
-          stroke-width: 2.5;
-          fill: none;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          animation: ${isPlaying
-            ? "flow 4s linear infinite reverse, beat 1s ease-in-out infinite"
-            : "none"};
-        }
-        @keyframes flow {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-200);
-          }
-        }
-        @keyframes beat {
-          0%,
-          20%,
-          40%,
-          60%,
-          80%,
-          100% {
-            transform: scaleY(1);
-          }
-          10%,
-          30%,
-          50%,
-          70% {
-            transform: scaleY(1.2);
-          }
-        }
-        .heartbeat-container {
-          overflow: hidden;
-        }
-      `}</style>
+      <div className="mb-2 text-sm text-secondary dark:text-secondary-foreground">
+        {playlist[currentSongIndex].title}
+      </div>
+      <div className="mb-2 text-sm text-secondary dark:text-secondary-foreground">
+        Song by {playlist[currentSongIndex].artist}
+      </div>
       <div
-        className="heartbeat-container w-full max-w-xs"
+        className={`heartbeat-container w-full max-w-xs ${isPlaying ? "playing" : ""}`}
         role="img"
         aria-label="Heartbeat animation with sound control, visible when music plays"
       >
@@ -159,13 +195,37 @@ const MusicAnimation = () => {
           />
         </svg>
       </div>
-      <button
-        onClick={togglePlayPause}
-        className="mt-4 rounded-full bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:scale-105 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-500"
-        aria-label={isPlaying ? "Pause heartbeat sound" : "Play heartbeat sound"}
-      >
-        {isPlaying ? "Pause" : "Play"}
-      </button>
+      <div className="my-2 flex w-full max-w-xs items-center justify-center space-x-2">
+        <button
+          onClick={prevSong}
+          className="text-secondary hover:text-foreground dark:text-secondary-foreground dark:hover:text-foreground"
+          aria-label="Previous song"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <button
+          onClick={togglePlayPause}
+          className="rounded-full bg-gray-200 px-3 py-1 text-secondary shadow-sm transition-all duration-300 hover:scale-105 hover:bg-white dark:bg-gray-700 dark:hover:bg-gray-500"
+          aria-label={isPlaying ? "Pause sound" : "Play  sound"}
+        >
+          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+        </button>
+        <button
+          onClick={nextSong}
+          className="text-secondary hover:text-foreground dark:text-secondary-foreground dark:hover:text-foreground"
+          aria-label="Next song"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={progress}
+        onChange={handleProgressChange}
+        className="progress-slider w-full max-w-xs"
+      />
       <button
         onClick={toggleMute}
         className="absolute top-0 right-0 rounded-full bg-card p-1.5 text-secondary shadow-sm transition-all duration-300 hover:scale-105"

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import emailjs from "@emailjs/browser";
 import { CheckCircle, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,8 @@ export default function ContactForm() {
   // Ensure component is only rendered on client to avoid hydration issues
   useEffect(() => {
     setIsClient(true);
+
+    emailjs.init("KtCtR1rM-GBB6vPnY");
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,16 +43,17 @@ export default function ContactForm() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("https://formspree.io/f/xwpboyez", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+      const response = await emailjs.send(
+        "service_0xtolh6", // Replace with your EmailJS Service ID
+        "template_fysm7pv", // Replace with your EmailJS Template ID
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
       } else {

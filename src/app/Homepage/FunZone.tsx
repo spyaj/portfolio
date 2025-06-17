@@ -14,7 +14,7 @@ export default function FunZone() {
           {/* Music section */}
           <div className="rounded-2xl bg-card p-8 shadow-xl">
             <h3 className="mb-4 text-2xl font-bold text-card-foreground">Enjoying Music 🎶</h3>
-            <p className="mb-4 text-secondary">Music is my escape and inspiration.</p>
+            <p className="mb-4 text-secondary">What i'm vibing to</p>
             <MusicAnimation />
           </div>
           <div className="rounded-2xl bg-card p-8 shadow-xl">
