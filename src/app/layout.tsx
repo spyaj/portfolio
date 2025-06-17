@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Pramod Joshi - Computer Engineer | Nepal | Portfolio",
+  title: "Pramod Joshi - Computer Engineering Student | Nepal | Portfolio",
   description:
     "The official portfolio of Pramod Joshi, a Computer Engineering graduate from United Technical College, Nepal. Explore my projects in web development, software engineering, and more. Contact me for collaboration.",
   keywords:
