@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://pramodjoshi.com.np/sitemap.xml",
-    host: "https://pramodjoshi.com.np",
+    sitemap: "https://www.pramodjoshi.com.np/sitemap.xml",
+    host: "https://www.pramodjoshi.com.np",
   };
 }

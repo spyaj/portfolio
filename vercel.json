@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/resume.pdf",
+      "destination": "https://www.pramodjoshi.com.np/",
+      "permanent": true
+    },
+    {
+      "source": "/pramod_joshi_resume_updated.pdf",
+      "destination": "https://www.pramodjoshi.com.np/",
+      "permanent": true
+    }
+  ]
+}
