@@ -1,59 +1,83 @@
-# Pramod Joshi Portfolio
+# Pramod Joshi - Portfolio Website
 
-Minimal Next.js + TypeScript portfolio with custom visual direction, smooth animations, and practical SEO setup.
+This is my personal portfolio website built with Next.js and TypeScript.
 
-## Sections Included
+It highlights who I am, what I build, and how to contact me for internships, freelance work, and collaborations.
 
-- About
-- Skills
-- Projects
-- Certificates
-- Hobbies
-- Contact
-- Resume download
+## About Me
 
-## Local Development
+I am a Computer Engineering student and web developer focused on building clean, practical, and user-friendly web experiences.
 
-1. Install dependencies:
+Primary focus:
 
-   npm install
+- Frontend development with React and Next.js
+- Responsive UI with Tailwind CSS
+- Minimal design with smooth, soft interactions
 
-2. Start development server:
+## Website Features
 
-   npm run dev
+- About section
+- Technical skills
+- Projects with live links
+- Certifications with verification links
+- Hobbies section
+- Contact section
+- Downloadable resume
+- Responsive navigation (desktop + mobile)
+- Basic SEO setup (`sitemap.xml`, `robots.txt`, metadata)
 
-3. Open:
+## Tech Stack
 
-   http://localhost:3000
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- ESLint
 
-## Production Build
+## Run Locally
 
-Run:
+1. Install dependencies
 
+```bash
+npm install
+```
+
+2. Start development server
+
+```bash
+npm run dev
+```
+
+3. Open in browser
+
+```text
+http://localhost:3000
+```
+
+## Build For Production
+
+```bash
 npm run build
+```
 
-This project is configured for static export and GitHub Pages deployment.
+## Deploy (Vercel)
 
-## GitHub Pages Deployment
+1. Push this repository to GitHub
+2. In Vercel, import the GitHub repository
+3. Framework is auto-detected as Next.js
+4. Deploy
 
-1. Push this folder to a GitHub repository.
-2. In GitHub repository settings:
-   - Open Pages
-   - Set Source to GitHub Actions
-3. Ensure your default branch is main.
-4. The workflow in .github/workflows/deploy.yml will build and deploy automatically.
+For future updates, push to `main` and Vercel will redeploy automatically.
 
-## Custom Domain
+## SEO Notes
 
-The domain is set via public/CNAME:
+This project already includes technical SEO basics, but hosting alone is not always enough for fast Google indexing.
 
-pramodjoshi.com.np
+Recommended actions after deploy:
 
-After deployment, configure your DNS provider records to point to GitHub Pages.
-
-## SEO Checklist After Deploy
-
-1. Add your domain property in Google Search Console.
+1. Add your live domain to Google Search Console
 2. Submit sitemap URL:
-   https://pramodjoshi.com.np/sitemap.xml
-3. Request indexing for your homepage.
+   `https://your-domain.com/sitemap.xml`
+3. Request indexing for the homepage and key pages
+4. Keep content updated and get a few backlinks/social shares
+
+Google will usually index automatically over time, but Search Console submission helps significantly.
